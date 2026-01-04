@@ -4,7 +4,7 @@
   "private": true,
   "main": "server.js",
   "engines": {
-    "node": "20.x || 22.x"
+    "node": "22.x"
   },
   "scripts": {
     "start": "node start.js",
