@@ -1,0 +1,10 @@
+<%- include('partials/header', { title: 'Settings' }) %>
+<h1>Settings</h1>
+<form class="card" method="post" action="/settings">
+  <label>Current Password</label>
+  <input type="password" name="current_password" required />
+  <label>New Password</label>
+  <input type="password" name="new_password" required />
+  <button type="submit">Update Password</button>
+</form>
+<%- include('partials/footer') %>

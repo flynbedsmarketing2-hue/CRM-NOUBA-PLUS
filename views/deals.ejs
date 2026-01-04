@@ -1,0 +1,54 @@
+<%- include('partials/header', { title: 'Deals' }) %>
+<div class="page-head">
+  <h1>Deals</h1>
+  <a class="button" href="/deals/new">+ New Deal</a>
+</div>
+
+<form class="filters" method="get" action="/deals">
+  <select name="campaign">
+    <option value="">All campaigns</option>
+    <% campaigns.forEach(c => { %>
+      <option value="<%= c.campaign_id %>" <%= filters.campaign === c.campaign_id ? 'selected' : '' %>><%= c.campaign_id %></option>
+    <% }) %>
+  </select>
+  <% if (user.role === 'MANAGER') { %>
+    <select name="owner">
+      <option value="">All owners</option>
+      <% agents.forEach(a => { %>
+        <option value="<%= a.id %>" <%= filters.owner == a.id ? 'selected' : '' %>><%= a.username %></option>
+      <% }) %>
+    </select>
+  <% } %>
+  <button type="submit">Filter</button>
+</form>
+
+<table>
+  <tr>
+    <th>Date</th>
+    <th>Lead</th>
+    <th>Product</th>
+    <th>Amount (DZD)</th>
+    <% if (user.role === 'MANAGER') { %>
+      <th>Cost</th>
+      <th>Margin</th>
+    <% } %>
+    <th>Owner</th>
+    <th></th>
+  </tr>
+  <% deals.forEach(d => { %>
+    <tr>
+      <td><%= d.deal_date || '' %></td>
+      <td><%= d.phone %> <%= d.name ? '(' + d.name + ')' : '' %></td>
+      <td><span class="badge"><%= d.product %></span></td>
+      <td><%= d.amount_dzd.toLocaleString() %></td>
+      <% if (user.role === 'MANAGER') { %>
+        <td><%= d.cost_dzd ? d.cost_dzd.toLocaleString() : '-' %></td>
+        <td><%= d.cost_dzd ? (d.amount_dzd - d.cost_dzd).toLocaleString() : '-' %></td>
+      <% } %>
+      <td><%= d.owner_username %></td>
+      <td><a href="/deals/<%= d.id %>">View</a></td>
+    </tr>
+  <% }) %>
+</table>
+
+<%- include('partials/footer') %>

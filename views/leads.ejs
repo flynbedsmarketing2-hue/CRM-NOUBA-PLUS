@@ -1,0 +1,63 @@
+<%- include('partials/header', { title: 'Leads' }) %>
+<div class="page-head">
+  <h1>Leads</h1>
+  <a class="button" href="/leads/new">+ Quick Add</a>
+</div>
+
+<form class="filters" method="get" action="/leads">
+  <input type="text" name="q" placeholder="Search phone/name" value="<%= filters.q || '' %>" />
+  <select name="status">
+    <option value="">All status</option>
+    <% lists.STATUSES.forEach(s => { %>
+      <option value="<%= s %>" <%= filters.status === s ? 'selected' : '' %>><%= s %></option>
+    <% }) %>
+  </select>
+  <select name="channel">
+    <option value="">All channels</option>
+    <% lists.CHANNELS.forEach(c => { %>
+      <option value="<%= c %>" <%= filters.channel === c ? 'selected' : '' %>><%= c %></option>
+    <% }) %>
+  </select>
+  <select name="campaign">
+    <option value="">All campaigns</option>
+    <% campaigns.forEach(c => { %>
+      <option value="<%= c.campaign_id %>" <%= filters.campaign === c.campaign_id ? 'selected' : '' %>><%= c.campaign_id %></option>
+    <% }) %>
+  </select>
+  <% if (user.role === 'MANAGER') { %>
+    <select name="owner">
+      <option value="">All owners</option>
+      <% agents.forEach(a => { %>
+        <option value="<%= a.id %>" <%= filters.owner == a.id ? 'selected' : '' %>><%= a.username %></option>
+      <% }) %>
+    </select>
+  <% } %>
+  <button type="submit">Filter</button>
+</form>
+
+<table>
+  <tr>
+    <th>Created</th>
+    <th>Phone</th>
+    <th>Name</th>
+    <th>Channel</th>
+    <th>Campaign</th>
+    <th>Status</th>
+    <th>Owner</th>
+    <th></th>
+  </tr>
+  <% leads.forEach(lead => { %>
+    <tr>
+      <td><%= (lead.created_at || '').slice(0, 10) %></td>
+      <td><%= lead.phone %></td>
+      <td><%= lead.name || '-' %></td>
+      <td><span class="badge"><%= lead.channel %></span></td>
+      <td><%= lead.campaign_id || '-' %></td>
+      <td><span class="status <%= lead.status %>"><%= lead.status %></span></td>
+      <td><%= lead.owner_username %></td>
+      <td><a href="/leads/<%= lead.id %>">View</a></td>
+    </tr>
+  <% }) %>
+</table>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,2 @@
+phone,name,channel,campaign_id,status,lost_reason,attempts_count,first_contacted_at,last_contact_at,next_followup_at,notes
+0550123456,Nadia,WhatsApp,WHATSAPP,New,,0,,,,Initial import

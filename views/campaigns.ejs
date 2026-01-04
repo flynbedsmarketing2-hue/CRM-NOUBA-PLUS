@@ -1,0 +1,51 @@
+<%- include('partials/header', { title: 'Campaigns' }) %>
+<h1>Campaigns</h1>
+
+<form class="card" method="post" action="/campaigns">
+  <h3>Create Campaign</h3>
+  <label>Campaign ID</label>
+  <input type="text" name="campaign_id" required />
+
+  <label>Name</label>
+  <input type="text" name="name" />
+
+  <label>Fixed Owner (optional)</label>
+  <select name="fixed_owner_user_id">
+    <option value="">None</option>
+    <% agents.forEach(a => { %>
+      <option value="<%= a.id %>"><%= a.username %></option>
+    <% }) %>
+  </select>
+  <button type="submit">Create</button>
+</form>
+
+<div class="card">
+  <h3>Existing Campaigns</h3>
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Fixed Owner</th>
+      <th></th>
+    </tr>
+    <% campaigns.forEach(c => { %>
+      <tr>
+        <form method="post" action="/campaigns/<%= c.id %>">
+          <td><%= c.campaign_id %></td>
+          <td><input type="text" name="name" value="<%= c.name || '' %>" /></td>
+          <td>
+            <select name="fixed_owner_user_id">
+              <option value="">None</option>
+              <% agents.forEach(a => { %>
+                <option value="<%= a.id %>" <%= c.fixed_owner_user_id === a.id ? 'selected' : '' %>><%= a.username %></option>
+              <% }) %>
+            </select>
+          </td>
+          <td><button type="submit">Update</button></td>
+        </form>
+      </tr>
+    <% }) %>
+  </table>
+</div>
+
+<%- include('partials/footer') %>

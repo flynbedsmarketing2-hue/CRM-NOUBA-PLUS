@@ -1,0 +1,22 @@
+{
+  "name": "crm-nouba-plus",
+  "version": "1.0.0",
+  "private": true,
+  "main": "server.js",
+  "engines": {
+    "node": "20.x || 22.x"
+  },
+  "scripts": {
+    "start": "node start.js",
+    "dev": "node start.js"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "better-sqlite3": "^11.7.0",
+    "csv-parse": "^5.6.0",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-session": "^1.18.0",
+    "multer": "^2.0.0"
+  }
+}

@@ -1,0 +1,59 @@
+<%- include('partials/header', { title: 'Deal' }) %>
+<h1>Deal #<%= deal.id %></h1>
+
+<div class="card">
+  <div><strong>Lead:</strong> <%= deal.phone %> <%= deal.name ? '(' + deal.name + ')' : '' %></div>
+  <div><strong>Campaign:</strong> <%= deal.campaign_id || '-' %></div>
+  <div><strong>Owner:</strong> <%= deal.owner_username %></div>
+</div>
+
+<form class="card" method="post" action="/deals/<%= deal.id %>" enctype="multipart/form-data">
+  <label>Deal Date</label>
+  <input type="date" name="deal_date" value="<%= deal.deal_date || '' %>" />
+
+  <label>Product</label>
+  <select name="product">
+    <% lists.PRODUCTS.forEach(p => { %>
+      <option value="<%= p %>" <%= deal.product === p ? 'selected' : '' %>><%= p %></option>
+    <% }) %>
+  </select>
+
+  <label>Amount (DZD)</label>
+  <input type="number" name="amount_dzd" value="<%= deal.amount_dzd %>" required />
+
+  <% if (user.role === 'MANAGER') { %>
+    <label>Cost (DZD)</label>
+    <input type="number" name="cost_dzd" value="<%= deal.cost_dzd || '' %>" />
+  <% } %>
+
+  <label>Payment Type</label>
+  <select name="payment_type">
+    <% lists.PAYMENT_TYPES.forEach(p => { %>
+      <option value="<%= p %>" <%= deal.payment_type === p ? 'selected' : '' %>><%= p %></option>
+    <% }) %>
+  </select>
+
+  <% if (deal.lead_status === 'Won') { %>
+    <label>Payment Proof</label>
+    <% if (deal.payment_proof) { %>
+      <div class="hint">
+        <a href="/uploads/<%= deal.payment_proof %>" target="_blank" rel="noopener">View current proof</a>
+      </div>
+    <% } %>
+    <input type="file" name="payment_proof_file" accept=".pdf,image/*" />
+  <% } %>
+
+  <label>Notes</label>
+  <textarea name="notes" rows="4"><%= deal.notes || '' %></textarea>
+
+  <button type="submit">Save</button>
+</form>
+
+<div class="card danger">
+  <h3>Danger Zone</h3>
+  <form method="post" action="/deals/<%= deal.id %>/delete" onsubmit="return confirm('Delete this deal?');">
+    <button type="submit" class="danger-btn">Delete Deal</button>
+  </form>
+</div>
+
+<%- include('partials/footer') %>

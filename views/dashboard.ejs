@@ -1,0 +1,55 @@
+<%- include('partials/header', { title: 'Dashboard' }) %>
+<h1>Dashboard</h1>
+
+<div class="grid">
+  <div class="card">
+    <h3>Revenue (DZD)</h3>
+    <div class="kpi"><%= revenue.amount.toLocaleString() %></div>
+    <% if (user.role === 'MANAGER') { %>
+      <div class="sub">Cost: <%= revenue.cost.toLocaleString() %></div>
+      <div class="sub">Margin: <%= revenue.margin.toLocaleString() %></div>
+    <% } %>
+  </div>
+  <div class="card">
+    <h3>Avg Response (hours)</h3>
+    <div class="kpi"><%= avgResponseHours.toFixed(1) %></div>
+  </div>
+</div>
+
+<div class="grid two">
+  <div class="card">
+    <h3>Leads by Channel</h3>
+    <table>
+      <tr><th>Channel</th><th>Count</th></tr>
+      <% leadsByChannel.forEach(row => { %>
+        <tr><td><%= row.channel %></td><td><%= row.count %></td></tr>
+      <% }) %>
+    </table>
+  </div>
+  <div class="card">
+    <h3>Leads by Campaign</h3>
+    <table>
+      <tr><th>Campaign</th><th>Count</th></tr>
+      <% leadsByCampaign.forEach(row => { %>
+        <tr><td><%= row.campaign_id || 'None' %></td><td><%= row.count %></td></tr>
+      <% }) %>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <h3>Conversion by Agent</h3>
+  <table>
+    <tr><th>Agent</th><th>Won</th><th>Total</th><th>Rate</th></tr>
+    <% conversionByAgent.forEach(row => { %>
+      <tr>
+        <td><%= row.username %></td>
+        <td><%= row.won %></td>
+        <td><%= row.total %></td>
+        <td><%= row.total ? ((row.won / row.total) * 100).toFixed(1) : '0.0' %>%</td>
+      </tr>
+    <% }) %>
+  </table>
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,39 @@
+<%- include('partials/header', { title: 'Import' }) %>
+<h1>CSV Import</h1>
+
+<div class="card">
+  <p>Download templates:</p>
+  <a class="button" href="/templates/leads.csv">Leads CSV</a>
+  <a class="button" href="/templates/deals.csv">Deals CSV</a>
+</div>
+
+<form class="card" method="post" action="/import" enctype="multipart/form-data">
+  <label>Leads CSV</label>
+  <input type="file" name="leads_csv" accept=".csv" />
+
+  <label>Deals CSV</label>
+  <input type="file" name="deals_csv" accept=".csv" />
+
+  <button type="submit">Import</button>
+</form>
+
+<% if (summary) { %>
+  <div class="card">
+    <h3>Summary</h3>
+    <p>Leads: <%= summary.leads.inserted %> inserted, <%= summary.leads.updated %> updated</p>
+    <p>Deals: <%= summary.deals.inserted %> inserted</p>
+    <% if (summary.leads.errors.length || summary.deals.errors.length) { %>
+      <h4>Errors</h4>
+      <ul>
+        <% summary.leads.errors.forEach(e => { %>
+          <li><%= e %></li>
+        <% }) %>
+        <% summary.deals.errors.forEach(e => { %>
+          <li><%= e %></li>
+        <% }) %>
+      </ul>
+    <% } %>
+  </div>
+<% } %>
+
+<%- include('partials/footer') %>

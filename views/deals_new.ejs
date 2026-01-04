@@ -1,0 +1,71 @@
+<%- include('partials/header', { title: 'New Deal' }) %>
+<h1>New Deal</h1>
+<form class="card" method="post" action="/deals" enctype="multipart/form-data">
+  <label>Lead (search by ID or phone)</label>
+  <input type="text" name="lead_id" list="lead-options" value="<%= lead ? lead.id : '' %>" required />
+  <datalist id="lead-options">
+    <% leads.forEach(l => { %>
+      <option value="<%= l.id %>"><%= l.phone %> <%= l.name ? '(' + l.name + ')' : '' %></option>
+    <% }) %>
+  </datalist>
+  <% if (lead) { %>
+    <div class="hint">Selected: <%= lead.phone %> <%= lead.name ? '(' + lead.name + ')' : '' %></div>
+  <% } %>
+
+  <label>Deal Date</label>
+  <input type="date" name="deal_date" />
+
+  <label>Product</label>
+  <select name="product">
+    <% lists.PRODUCTS.forEach(p => { %>
+      <option value="<%= p %>"><%= p %></option>
+    <% }) %>
+  </select>
+
+  <label>Amount (DZD)</label>
+  <input type="number" name="amount_dzd" required />
+
+  <% if (user.role === 'MANAGER') { %>
+    <label>Cost (DZD)</label>
+    <input type="number" name="cost_dzd" />
+  <% } %>
+
+  <label>Payment Type</label>
+  <select name="payment_type">
+    <% lists.PAYMENT_TYPES.forEach(p => { %>
+      <option value="<%= p %>"><%= p %></option>
+    <% }) %>
+  </select>
+
+  <label>Notes</label>
+  <textarea name="notes" rows="4"></textarea>
+
+  <label class="inline">
+    <input type="checkbox" name="set_won" value="1" id="set-won" /> Set lead to Won
+  </label>
+
+  <div id="proof-wrap" class="proof <%= lead && lead.status === 'Won' ? '' : 'hidden' %>">
+    <label>Payment Proof (required if Won)</label>
+    <input type="file" name="payment_proof_file" accept=".pdf,image/*" />
+  </div>
+
+  <button type="submit">Create Deal</button>
+</form>
+<script>
+  (function () {
+    var toggle = document.getElementById('set-won');
+    var wrap = document.getElementById('proof-wrap');
+    var forceVisible = <%= lead && lead.status === 'Won' ? 'true' : 'false' %>;
+    if (!toggle || !wrap) return;
+    function sync() {
+      if (forceVisible) {
+        wrap.classList.remove('hidden');
+        return;
+      }
+      wrap.classList.toggle('hidden', !toggle.checked);
+    }
+    toggle.addEventListener('change', sync);
+    sync();
+  })();
+</script>
+<%- include('partials/footer') %>

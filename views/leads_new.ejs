@@ -1,0 +1,27 @@
+<%- include('partials/header', { title: 'Quick Add Lead' }) %>
+<h1>Quick Add Lead</h1>
+<form class="card" method="post" action="/leads">
+  <label>Phone (required)</label>
+  <input type="text" name="phone" required />
+
+  <label>Channel</label>
+  <select name="channel">
+    <% lists.CHANNELS.forEach(c => { %>
+      <option value="<%= c %>"><%= c %></option>
+    <% }) %>
+  </select>
+
+  <label>Campaign</label>
+  <select name="campaign_id">
+    <option value="">None</option>
+    <% campaigns.forEach(c => { %>
+      <option value="<%= c.campaign_id %>"><%= c.campaign_id %></option>
+    <% }) %>
+  </select>
+
+  <label>Name (optional)</label>
+  <input type="text" name="name" />
+
+  <button type="submit">Create Lead</button>
+</form>
+<%- include('partials/footer') %>

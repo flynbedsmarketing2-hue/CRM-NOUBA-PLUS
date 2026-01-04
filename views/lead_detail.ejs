@@ -1,0 +1,89 @@
+<%- include('partials/header', { title: 'Lead' }) %>
+<div class="page-head">
+  <h1>Lead #<%= lead.id %></h1>
+  <a class="button" href="/deals/new?lead_id=<%= lead.id %>">+ Add Deal</a>
+</div>
+
+<div class="card">
+  <div class="grid two">
+    <div>
+      <div><strong>Phone:</strong> <%= lead.phone %></div>
+      <div><strong>Owner:</strong> <%= lead.owner_username %></div>
+      <div><strong>Attempts:</strong> <%= lead.attempts_count %></div>
+      <div><strong>Last Contact:</strong> <%= lead.last_contact_at ? lead.last_contact_at.slice(0, 16) : '-' %></div>
+    </div>
+    <div>
+      <div><strong>Status:</strong> <span class="status <%= lead.status %>"><%= lead.status %></span></div>
+      <div><strong>Campaign:</strong> <%= lead.campaign_id || '-' %></div>
+      <div><strong>Channel:</strong> <%= lead.channel %></div>
+      <div><strong>Next Follow-up:</strong> <%= lead.next_followup_at ? lead.next_followup_at.slice(0, 16) : '-' %></div>
+    </div>
+  </div>
+
+  <form class="inline" method="post" action="/leads/<%= lead.id %>/attempt">
+    <button type="submit">+1 Attempt</button>
+  </form>
+</div>
+
+<form class="card" method="post" action="/leads/<%= lead.id %>">
+  <label>Name</label>
+  <input type="text" name="name" value="<%= lead.name || '' %>" />
+
+  <label>Channel</label>
+  <select name="channel">
+    <% lists.CHANNELS.forEach(c => { %>
+      <option value="<%= c %>" <%= lead.channel === c ? 'selected' : '' %>><%= c %></option>
+    <% }) %>
+  </select>
+
+  <label>Campaign</label>
+  <select name="campaign_id">
+    <option value="">None</option>
+    <% campaigns.forEach(c => { %>
+      <option value="<%= c.campaign_id %>" <%= lead.campaign_id === c.campaign_id ? 'selected' : '' %>><%= c.campaign_id %></option>
+    <% }) %>
+  </select>
+
+  <% if (user.role === 'MANAGER') { %>
+    <label>Owner</label>
+    <select name="owner_user_id">
+      <% agents.forEach(a => { %>
+        <option value="<%= a.id %>" <%= lead.owner_user_id === a.id ? 'selected' : '' %>><%= a.username %></option>
+      <% }) %>
+    </select>
+  <% } %>
+
+  <label>Status</label>
+  <select name="status">
+    <% lists.STATUSES.forEach(s => { %>
+      <option value="<%= s %>" <%= lead.status === s ? 'selected' : '' %>><%= s %></option>
+    <% }) %>
+  </select>
+
+  <label>Lost Reason (only if Lost)</label>
+  <select name="lost_reason">
+    <option value="">None</option>
+    <% lists.LOST_REASONS.forEach(r => { %>
+      <option value="<%= r %>" <%= lead.lost_reason === r ? 'selected' : '' %>><%= r %></option>
+    <% }) %>
+  </select>
+
+  <label>Next Follow-up</label>
+  <input type="datetime-local" name="next_followup_at" value="<%= lead.next_followup_at ? lead.next_followup_at.slice(0, 16) : '' %>" />
+
+  <label>Notes</label>
+  <textarea name="notes" rows="4"><%= lead.notes || '' %></textarea>
+
+  <button type="submit">Save</button>
+</form>
+
+<% if (user.role === 'MANAGER') { %>
+  <div class="card danger">
+    <h3>Danger Zone</h3>
+    <form method="post" action="/leads/<%= lead.id %>/delete" onsubmit="return confirm('Delete this lead and its deals?');">
+      <button type="submit" class="danger-btn">Delete Lead</button>
+    </form>
+  </div>
+<% } %>
+
+<%- include('partials/footer') %>
