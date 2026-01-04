@@ -71,6 +71,7 @@ Vercel runs serverless functions with ephemeral storage. SQLite data and uploade
 
 1. Push this repo to GitHub and import it into Vercel.
 2. Set `SESSION_SECRET` in Vercel Environment Variables.
+3. Set the Project Node.js Version to 22.x in Vercel Settings.
 3. Deploy.
 
 Notes:
